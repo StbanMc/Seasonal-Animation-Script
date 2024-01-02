@@ -11,8 +11,8 @@
  */
 
 /**
- * Seasonal Animation Object - Version 3
- * - Improved code structure, comments, and added documentation for better understanding.
+ * Seasonal Animation Object - Version 4
+ * - Enhancements to code structure, comments, and documentation for improved readability.
  *
  * @property {number} interval - ID for the interval controlling the animation.
  *
