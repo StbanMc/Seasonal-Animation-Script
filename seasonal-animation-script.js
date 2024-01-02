@@ -11,67 +11,71 @@
  */
 
 /**
- * Seasonal Animation Object - Version 2
- * - Enhanced code structure and comments for better clarity and documentation.
+ * Seasonal Animation Object - Version 3
+ * - Improved code structure, comments, and added documentation for better understanding.
  *
- * @property {number} requestID - ID for animation frame request.
+ * @property {number} interval - ID for the interval controlling the animation.
  *
  * @method startAnimation - Initiates the seasonal animation.
- *   Clears existing animation and elements before starting.
- *   Generates seasonal elements with customizable properties.
+ *   Clears existing intervals and removes any existing seasonal elements.
+ *   Generates customizable seasonal elements falling at random intervals.
+ * 
+ * @param {object} options - Customization options for the animation.
+ *   @property {number} minSize - Minimum size of seasonal elements.
+ *   @property {number} maxSize - Maximum size of seasonal elements.
+ *   @property {number} newOn - Interval for creating new seasonal elements.
+ *   @property {string} elementColor - Color of seasonal elements.
  */
 var seasonalObject = {
-    requestID: null,
 
-    startAnimation: function () {
-        // Clear existing animation and elements
-        if (this.requestID) {
-            cancelAnimationFrame(this.requestID);
-            $('.seasonalElement').remove();
-        }
+    interval: null,
 
-        // Retrieve document dimensions and set default options
-        var documentHeight = $(document).height(),
+    startAnimation: function (options) {
+        // Clear existing intervals and elements
+        clearInterval(this.interval);
+        $('.seasonalElement').remove();
+
+        // Create a placeholder element
+        var $element = $('<div id="element" class="seasonalElement" />').css({ 'position': 'absolute', 'top': '-50px', 'z-index': '2000' }).html('PLACEHOLDER'),
+            documentHeight = $(document).height(),
             documentWidth = $(document).width(),
-            minSize = 20,
-            maxSize = 30,
-            elementColor = "#000000";
+            defaults = {
+                minSize: 20,
+                maxSize: 30,
+                newOn: 500,
+                elementColor: "#000000"
+            },
+            options = $.extend({}, defaults, options);
 
-        /**
-         * Function to animate seasonal elements
-         */
-        var animateElement = () => {
+        // Set up the animation interval
+        this.interval = setInterval(function () {
             var startPositionLeft = Math.random() * documentWidth - 100,
-                sizeElement = minSize + Math.random() * maxSize,
+                startOpacity = 0.5 + Math.random(),
+                sizeElement = options.minSize + Math.random() * options.maxSize,
                 endPositionTop = documentHeight - 40,
-                endPositionLeft = startPositionLeft - 100 + Math.random() * 200;
+                endPositionLeft = startPositionLeft - 100 + Math.random() * 200,
+                durationFall = documentHeight * 10 + Math.random() * 5000;
 
-            // Create and style seasonal element
-            $('<div class="seasonalElement" />')
-                .css({
-                    position: 'absolute',
-                    top: '-50px',
-                    left: startPositionLeft,
-                    opacity: 0.5 + Math.random(),
-                    fontSize: sizeElement,
-                    color: elementColor,
-                    zIndex: 2000
-                })
-                .html('&#10052;') // Change the content based on the desired seasonal symbol
+            // Clone the placeholder element and animate its fall
+            $element
+                .clone()
                 .appendTo('body')
+                .css({
+                    left: startPositionLeft,
+                    opacity: startOpacity,
+                    'font-size': sizeElement,
+                    color: options.elementColor
+                })
                 .animate({
                     top: endPositionTop,
                     left: endPositionLeft,
                     opacity: 0.2
-                }, documentHeight * 10 + Math.random() * 5000, 'linear', function () {
+                },
+                durationFall,
+                'linear',
+                function () {
                     $(this).remove();
                 });
-
-            // Continue the animation
-            this.requestID = requestAnimationFrame(animateElement);
-        };
-
-        // Initiate animation
-        this.requestID = requestAnimationFrame(animateElement);
+        }, options.newOn);
     }
 };
