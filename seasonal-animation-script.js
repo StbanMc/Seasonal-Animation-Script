@@ -11,12 +11,14 @@
  */
 
 /**
- * Updated Seasonal Animation Object
- * - Refactored the startAnimation method for better readability and flexibility.
+ * Seasonal Animation Object - Version 2
+ * - Enhanced code structure and comments for better clarity and documentation.
  *
  * @property {number} requestID - ID for animation frame request.
  *
  * @method startAnimation - Initiates the seasonal animation.
+ *   Clears existing animation and elements before starting.
+ *   Generates seasonal elements with customizable properties.
  */
 var seasonalObject = {
     requestID: null,
@@ -55,7 +57,7 @@ var seasonalObject = {
                     color: elementColor,
                     zIndex: 2000
                 })
-                .html('PLACEHOLDER') // Change based on the season
+                .html('&#10052;') // Change the content based on the desired seasonal symbol
                 .appendTo('body')
                 .animate({
                     top: endPositionTop,
