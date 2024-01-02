@@ -11,52 +11,58 @@
  */
 
 /**
- * Seasonal Animation Object - Version 4.3
- * - Code cleanup, enhanced comments, and improved default values for customization.
+ * Seasonal Animation Object
+ * This object controls a seasonal animation, generating visual elements that simulate, for example, falling snow.
+ * 
+ * Updatable Variables:
+ * @param {number} newOn - Frequency of new element appearance in milliseconds.
+ * @param {object} options - Customization options: minSize, maxSize, elementColor.
  *
- * @property {number} requestID - ID for animation frame request.
+ * @property {number} requestID - ID to control animation request. Useful to stop the animation.
+ * @property {number} newOn - Frequency of new elements appearing. Default value 500ms.
  *
- * @method startAnimation - Initiates the seasonal animation.
- *   Clears existing animation and removes any existing seasonal elements.
- *   Generates customizable seasonal elements falling at random intervals.
- *   Uses updated default values for customization.
+ * @method startAnimation - Initiates the animation based on provided options.
  */
 var seasonalObject = {
     requestID: null,
+    newOn: 500, // Frequency of new element appearances (in milliseconds)
 
     /**
-     * @function startAnimation
-     * @description Initiates the seasonal animation.
-     * @summary Clears existing animation and elements, then generates customizable seasonal elements.
-     * @returns {void}
+     * Initiates the seasonal animation.
+     * Clears any previous animation and existing elements before starting anew.
+     * 
+     * @param {object} options - Customization options for the animation.
      */
-    startAnimation: function () {
-        // Clear existing animation and elements
+    startAnimation: function (options) {
+        // Clear existing animations and elements
         if (this.requestID) {
             cancelAnimationFrame(this.requestID);
             $('.seasonalElement').remove();
         }
 
-        // Default values set here
+        // Default configuration and extended customization options
+        var defaults = {
+            minSize: 20, // Minimum size of elements
+            maxSize: 30, // Maximum size of elements
+            elementColor: "#E8E8E8" // Default color of elements
+        };
+        options = $.extend({}, defaults, options);
+
         var documentHeight = $(document).height(),
-            documentWidth = $(document).width(),
-            minSize = 20,
-            maxSize = 30,
-            elementColor = "#fff"; // Updated default color
+            documentWidth = $(document).width();
 
         /**
-         * @function animateElement
-         * @description Function to animate seasonal elements.
-         * @summary Creates and styles seasonal elements, initiating their fall animation.
-         * @returns {void}
+         * Function to animate each individual element.
+         * Defines the initial position, size, and animated behavior of each element.
          */
         var animateElement = () => {
+            // Defining position and size of elements
             var startPositionLeft = Math.random() * documentWidth - 100,
-                sizeElement = minSize + Math.random() * maxSize,
+                sizeElement = options.minSize + Math.random() * options.maxSize,
                 endPositionTop = documentHeight - 40,
                 endPositionLeft = startPositionLeft - 100 + Math.random() * 200;
 
-            // Create and style seasonal element
+            // Creation and animation of the element
             $('<div class="seasonalElement" />')
                 .css({
                     position: 'absolute',
@@ -64,10 +70,10 @@ var seasonalObject = {
                     left: startPositionLeft,
                     opacity: 0.5 + Math.random(),
                     fontSize: sizeElement,
-                    color: elementColor,
+                    color: options.elementColor,
                     zIndex: 2000
                 })
-                .html('&#10052;') // Updated placeholder for seasonal element
+                .html('&#10052;')  // Seasonal element symbol, modify as needed
                 .appendTo('body')
                 .animate({
                     top: endPositionTop,
@@ -77,10 +83,11 @@ var seasonalObject = {
                     $(this).remove();
                 });
 
-            this.requestID = requestAnimationFrame(animateElement);
+            this.requestID = setTimeout(animateElement, this.newOn);
         };
 
-        // Initiate animation
-        this.requestID = requestAnimationFrame(animateElement);
+        // Begin the animation with the first invocation of animateElement
+        this.requestID = setTimeout(animateElement, this.newOn);
     }
 };
+
