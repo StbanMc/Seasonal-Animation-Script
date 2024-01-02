@@ -9,49 +9,42 @@
  * Copyright © 2023 E.E. TEAM All Rights Reserved.
  * License: GNU General Public License (GPL)
  */
+
 /**
- * Seasonal Animation Object
- * - Handles the generation and animation of seasonal elements.
+ * Updated Seasonal Animation Object
+ * - Refactored the startAnimation method for better readability and flexibility.
  *
  * @property {number} requestID - ID for animation frame request.
  *
  * @method startAnimation - Initiates the seasonal animation.
- * @param {object} options - Customization options for the animation.
- *   @property {number} minSize - Minimum size of seasonal elements.
- *   @property {number} maxSize - Maximum size of seasonal elements.
- *   @property {string} elementColor - Color of seasonal elements.
  */
 var seasonalObject = {
     requestID: null,
 
-    startAnimation: function (options) {
+    startAnimation: function () {
         // Clear existing animation and elements
         if (this.requestID) {
             cancelAnimationFrame(this.requestID);
             $('.seasonalElement').remove();
         }
 
-        // Default options
-        var defaults = {
-            minSize: 20,
-            maxSize: 30,
-            elementColor: "#000000"
-        };
-
-        // Merge default and user-provided options
-        options = $.extend({}, defaults, options);
+        // Retrieve document dimensions and set default options
         var documentHeight = $(document).height(),
-            documentWidth = $(document).width();
+            documentWidth = $(document).width(),
+            minSize = 20,
+            maxSize = 30,
+            elementColor = "#000000";
 
         /**
          * Function to animate seasonal elements
          */
         var animateElement = () => {
             var startPositionLeft = Math.random() * documentWidth - 100,
-                sizeElement = options.minSize + Math.random() * options.maxSize,
+                sizeElement = minSize + Math.random() * maxSize,
                 endPositionTop = documentHeight - 40,
                 endPositionLeft = startPositionLeft - 100 + Math.random() * 200;
 
+            // Create and style seasonal element
             $('<div class="seasonalElement" />')
                 .css({
                     position: 'absolute',
@@ -59,7 +52,7 @@ var seasonalObject = {
                     left: startPositionLeft,
                     opacity: 0.5 + Math.random(),
                     fontSize: sizeElement,
-                    color: options.elementColor,
+                    color: elementColor,
                     zIndex: 2000
                 })
                 .html('PLACEHOLDER') // Change based on the season
@@ -72,6 +65,7 @@ var seasonalObject = {
                     $(this).remove();
                 });
 
+            // Continue the animation
             this.requestID = requestAnimationFrame(animateElement);
         };
 
@@ -79,4 +73,3 @@ var seasonalObject = {
         this.requestID = requestAnimationFrame(animateElement);
     }
 };
-
