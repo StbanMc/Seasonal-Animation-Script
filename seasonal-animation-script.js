@@ -11,19 +11,25 @@
  */
 
 /**
- * Seasonal Animation Object - Version 6
- * - Code cleanup, enhanced comments, and improved documentation for clarity.
+ * Seasonal Animation Object - Version 4.3
+ * - Code cleanup, enhanced comments, and improved default values for customization.
  *
  * @property {number} requestID - ID for animation frame request.
  *
  * @method startAnimation - Initiates the seasonal animation.
  *   Clears existing animation and removes any existing seasonal elements.
  *   Generates customizable seasonal elements falling at random intervals.
- *   Uses default values for customization, which can be modified as needed.
+ *   Uses updated default values for customization.
  */
 var seasonalObject = {
     requestID: null,
 
+    /**
+     * @function startAnimation
+     * @description Initiates the seasonal animation.
+     * @summary Clears existing animation and elements, then generates customizable seasonal elements.
+     * @returns {void}
+     */
     startAnimation: function () {
         // Clear existing animation and elements
         if (this.requestID) {
@@ -31,15 +37,18 @@ var seasonalObject = {
             $('.seasonalElement').remove();
         }
 
-        // Default values set directly here
+        // Default values set here
         var documentHeight = $(document).height(),
             documentWidth = $(document).width(),
             minSize = 20,
             maxSize = 30,
-            elementColor = "#000000"; // You can change these values according to your needs
+            elementColor = "#fff"; // Updated default color
 
         /**
-         * Function to animate seasonal elements
+         * @function animateElement
+         * @description Function to animate seasonal elements.
+         * @summary Creates and styles seasonal elements, initiating their fall animation.
+         * @returns {void}
          */
         var animateElement = () => {
             var startPositionLeft = Math.random() * documentWidth - 100,
@@ -58,7 +67,7 @@ var seasonalObject = {
                     color: elementColor,
                     zIndex: 2000
                 })
-                .html('PLACEHOLDER') // Change based on the season
+                .html('&#10052;') // Updated placeholder for seasonal element
                 .appendTo('body')
                 .animate({
                     top: endPositionTop,
